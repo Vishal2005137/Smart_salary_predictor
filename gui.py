@@ -173,10 +173,20 @@ st.markdown('<div class="subtitle">AI Powered HR Intelligence</div>', unsafe_all
 # ==========================================
 # Load Model (Wrapped in Try-Except for Safety)
 # ==========================================
+from pathlib import Path
+
+MODEL_PATH = Path(__file__).resolve().parent / "hr_salary_prediction_model.pkl"
+
 try:
-    model = joblib.load("hr_salary_prediction_model.pkl")
-except:
-    st.error("Model file not found. Please ensure 'hr_salary_prediction_model.pkl' exists.")
+    model = joblib.load(MODEL_PATH)
+except FileNotFoundError:
+    st.error(
+        "Model file not found. Please run salary_model.py first "
+        "and ensure the model file is in the same folder as gui.py."
+    )
+    st.stop()
+except Exception as e:
+    st.error(f"Unable to load the model: {e}")
     st.stop()
 
 # ==========================================
